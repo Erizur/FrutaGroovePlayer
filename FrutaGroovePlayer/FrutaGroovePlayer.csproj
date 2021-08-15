@@ -1,0 +1,149 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <Import Condition=" '$(EAZFUSCATOR_NET_HOME)' != '' and Exists('$(EAZFUSCATOR_NET_HOME)\Integration\MSBuild\Eazfuscator.NET.targets') " Project="$(EAZFUSCATOR_NET_HOME)\Integration\MSBuild\Eazfuscator.NET.targets" />
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <StartupObject>FrutaGroovePlayer.Program</StartupObject>
+    <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- Eazfuscator.NET is integrated with this project at MSBuild level: https://www.gapotchenko.com/eazfuscator.net/kb/100036 -->
+    <EazfuscatorIntegration>MSBuild</EazfuscatorIntegration>
+    <EazfuscatorActiveConfiguration>Release</EazfuscatorActiveConfiguration>
+    <EazfuscatorCompatibilityVersion>2021.1</EazfuscatorCompatibilityVersion>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>FrutGroovPlayer.pfx</AssemblyOriginatorKeyFile>
+    <ApplicationIcon>newLogo.ico</ApplicationIcon>
+    <PackageIcon>logo.png</PackageIcon>
+    <PackageIconUrl />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
+    <PublishSingleFile>true</PublishSingleFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="bin\**" />
+    <EmbeddedResource Remove="bin\**" />
+    <None Remove="bin\**" />
+    <None Include="C:\Users\angel\Pictures\FrutaGroove\logo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="lib\Microsoft.WindowsAPICodePack.dll" />
+    <None Remove="lib\Microsoft.WindowsAPICodePack.Shell.dll" />
+    <None Remove="lib\NAudio.Asio.dll" />
+    <None Remove="lib\NAudio.Core.dll" />
+    <None Remove="lib\NAudio.dll" />
+    <None Remove="lib\NAudio.Midi.dll" />
+    <None Remove="lib\NAudio.Wasapi.dll" />
+    <None Remove="lib\NAudio.WinForms.dll" />
+    <None Remove="lib\NAudio.WinMM.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="lib\Microsoft.WindowsAPICodePack.dll" />
+    <EmbeddedResource Include="lib\Microsoft.WindowsAPICodePack.Shell.dll" />
+    <EmbeddedResource Include="lib\NAudio.Asio.dll" />
+    <EmbeddedResource Include="lib\NAudio.Core.dll" />
+    <EmbeddedResource Include="lib\NAudio.dll" />
+    <EmbeddedResource Include="lib\NAudio.Midi.dll" />
+    <EmbeddedResource Include="lib\NAudio.Wasapi.dll" />
+    <EmbeddedResource Include="lib\NAudio.WinForms.dll" />
+    <EmbeddedResource Include="lib\NAudio.WinMM.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DiscordRichPresence" Version="1.0.175" />
+    <PackageReference Include="NAudio" Version="2.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="TagLibSharp" Version="2.2.0" />
+    <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="gTrackBar">
+      <HintPath>lib\gTrackBar.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack">
+      <HintPath>lib\Microsoft.WindowsAPICodePack.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell">
+      <HintPath>lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="NAudio">
+      <HintPath>lib\NAudio.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="NAudio.Asio">
+      <HintPath>lib\NAudio.Asio.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="NAudio.Core">
+      <HintPath>lib\NAudio.Core.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="NAudio.Midi">
+      <HintPath>lib\NAudio.Midi.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="NAudio.Wasapi">
+      <HintPath>lib\NAudio.Wasapi.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="NAudio.WinForms">
+      <HintPath>lib\NAudio.WinForms.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="NAudio.WinMM">
+      <HintPath>lib\NAudio.WinMM.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="PresentationCore">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v3.5\Profile\Client\PresentationCore.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="PresentationFramework">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v3.5\Profile\Client\PresentationFramework.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="PresentationFramework.Aero">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v3.5\Profile\Client\PresentationFramework.Aero.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+</Project>
