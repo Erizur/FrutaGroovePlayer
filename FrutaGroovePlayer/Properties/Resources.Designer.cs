@@ -63,6 +63,16 @@ namespace FrutaGroovePlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap aboutFGP {
+            get {
+                object obj = ResourceManager.GetObject("aboutFGP", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap logo {
             get {
                 object obj = ResourceManager.GetObject("logo", resourceCulture);
@@ -296,6 +306,16 @@ namespace FrutaGroovePlayer.Properties {
         internal static System.Drawing.Bitmap previousSymbol {
             get {
                 object obj = ResourceManager.GetObject("previousSymbol", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap settingsSymbol {
+            get {
+                object obj = ResourceManager.GetObject("settingsSymbol", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
