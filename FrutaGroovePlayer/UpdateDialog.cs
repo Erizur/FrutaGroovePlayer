@@ -36,7 +36,7 @@ namespace FrutaGroovePlayer
             client.DownloadFileCompleted += Client_DownloadFileCompleted;
             string downloadUrl = "";
             Version newVer = null;
-            string xmlUrl = "";
+            string xmlUrl = "https://github.com/Erizur/FrutaGroovePlayer/blob/main/FrutaGroovePlayer/updater.xml";
             XmlTextReader reader = null;
             try
             {
