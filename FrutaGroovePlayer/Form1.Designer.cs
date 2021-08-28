@@ -46,6 +46,7 @@ namespace FrutaGroovePlayer
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
@@ -68,12 +69,13 @@ namespace FrutaGroovePlayer
             this.PlayButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.PlayButton.FlatAppearance.BorderSize = 0;
             this.PlayButton.ForeColor = System.Drawing.Color.Transparent;
-            this.PlayButton.Location = new System.Drawing.Point(106, 260);
+            this.PlayButton.Location = new System.Drawing.Point(61, 260);
             this.PlayButton.Name = "PlayButton";
             this.PlayButton.Size = new System.Drawing.Size(53, 51);
             this.PlayButton.TabIndex = 1;
             this.PlayButton.UseVisualStyleBackColor = false;
             this.PlayButton.Click += new System.EventHandler(this.PlayButton_Click);
+            this.PlayButton.MouseHover += new System.EventHandler(this.PlayButton_MouseHover);
             // 
             // PauseButton
             // 
@@ -82,27 +84,29 @@ namespace FrutaGroovePlayer
             this.PauseButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.PauseButton.FlatAppearance.BorderSize = 0;
             this.PauseButton.ForeColor = System.Drawing.Color.Transparent;
-            this.PauseButton.Location = new System.Drawing.Point(106, 260);
+            this.PauseButton.Location = new System.Drawing.Point(61, 260);
             this.PauseButton.Name = "PauseButton";
             this.PauseButton.Size = new System.Drawing.Size(53, 51);
             this.PauseButton.TabIndex = 2;
             this.PauseButton.UseVisualStyleBackColor = false;
             this.PauseButton.Visible = false;
             this.PauseButton.Click += new System.EventHandler(this.PauseButton_Click);
+            this.PauseButton.MouseHover += new System.EventHandler(this.PauseButton_MouseHover);
             // 
             // button1
             // 
             this.button1.BackColor = System.Drawing.Color.Transparent;
+            this.button1.BackgroundImage = global::FrutaGroovePlayer.Properties.Resources.importSongSymbol;
             this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.button1.FlatAppearance.BorderSize = 0;
             this.button1.ForeColor = System.Drawing.Color.Black;
-            this.button1.Location = new System.Drawing.Point(2, 260);
+            this.button1.Location = new System.Drawing.Point(235, 286);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(98, 23);
+            this.button1.Size = new System.Drawing.Size(25, 25);
             this.button1.TabIndex = 3;
-            this.button1.Text = "Load File...";
-            this.button1.UseVisualStyleBackColor = false;
+            this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            this.button1.MouseHover += new System.EventHandler(this.button1_MouseHover);
             // 
             // button2
             // 
@@ -111,17 +115,18 @@ namespace FrutaGroovePlayer
             this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.button2.FlatAppearance.BorderSize = 0;
             this.button2.ForeColor = System.Drawing.Color.Transparent;
-            this.button2.Location = new System.Drawing.Point(165, 260);
+            this.button2.Location = new System.Drawing.Point(114, 260);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(53, 51);
             this.button2.TabIndex = 4;
             this.button2.UseVisualStyleBackColor = false;
             this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.button2.MouseHover += new System.EventHandler(this.button2_MouseHover);
             // 
             // trackBar1
             // 
             this.trackBar1.AutoSize = false;
-            this.trackBar1.Location = new System.Drawing.Point(224, 260);
+            this.trackBar1.Location = new System.Drawing.Point(232, 260);
             this.trackBar1.Maximum = 100;
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Size = new System.Drawing.Size(96, 23);
@@ -145,7 +150,7 @@ namespace FrutaGroovePlayer
             // 
             this.trackBar2.AutoSize = false;
             this.trackBar2.BackColor = System.Drawing.Color.Black;
-            this.trackBar2.Location = new System.Drawing.Point(12, 218);
+            this.trackBar2.Location = new System.Drawing.Point(14, 218);
             this.trackBar2.Maximum = 100;
             this.trackBar2.Name = "trackBar2";
             this.trackBar2.Size = new System.Drawing.Size(308, 23);
@@ -158,26 +163,27 @@ namespace FrutaGroovePlayer
             // button3
             // 
             this.button3.BackColor = System.Drawing.Color.Transparent;
+            this.button3.BackgroundImage = global::FrutaGroovePlayer.Properties.Resources.importPlaylistSymbol;
             this.button3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.button3.FlatAppearance.BorderSize = 0;
             this.button3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.button3.ForeColor = System.Drawing.Color.Black;
-            this.button3.Location = new System.Drawing.Point(2, 288);
+            this.button3.Location = new System.Drawing.Point(266, 286);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(98, 23);
+            this.button3.Size = new System.Drawing.Size(25, 25);
             this.button3.TabIndex = 7;
-            this.button3.Text = "Load Playlist...";
-            this.button3.UseVisualStyleBackColor = false;
+            this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.button3.MouseHover += new System.EventHandler(this.button3_MouseHover);
             // 
             // pictureBox2
             // 
             this.pictureBox2.BackgroundImage = global::FrutaGroovePlayer.Properties.Resources.nocoverNew;
             this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pictureBox2.InitialImage = global::FrutaGroovePlayer.Properties.Resources.nocoverNew;
-            this.pictureBox2.Location = new System.Drawing.Point(61, 12);
+            this.pictureBox2.Location = new System.Drawing.Point(70, 12);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(206, 200);
+            this.pictureBox2.Size = new System.Drawing.Size(200, 200);
             this.pictureBox2.TabIndex = 8;
             this.pictureBox2.TabStop = false;
             // 
@@ -193,12 +199,13 @@ namespace FrutaGroovePlayer
             this.button4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.button4.FlatAppearance.BorderSize = 0;
             this.button4.ForeColor = System.Drawing.Color.Transparent;
-            this.button4.Location = new System.Drawing.Point(232, 285);
+            this.button4.Location = new System.Drawing.Point(6, 260);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(25, 25);
+            this.button4.Size = new System.Drawing.Size(53, 51);
             this.button4.TabIndex = 9;
             this.button4.UseVisualStyleBackColor = false;
             this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.button4.MouseHover += new System.EventHandler(this.button4_MouseHover);
             // 
             // button5
             // 
@@ -207,12 +214,13 @@ namespace FrutaGroovePlayer
             this.button5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.button5.FlatAppearance.BorderSize = 0;
             this.button5.ForeColor = System.Drawing.Color.Transparent;
-            this.button5.Location = new System.Drawing.Point(263, 286);
+            this.button5.Location = new System.Drawing.Point(169, 260);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(25, 25);
+            this.button5.Size = new System.Drawing.Size(53, 51);
             this.button5.TabIndex = 10;
             this.button5.UseVisualStyleBackColor = false;
             this.button5.Click += new System.EventHandler(this.button5_Click);
+            this.button5.MouseHover += new System.EventHandler(this.button5_MouseHover);
             // 
             // button6
             // 
@@ -221,19 +229,20 @@ namespace FrutaGroovePlayer
             this.button6.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.button6.FlatAppearance.BorderSize = 0;
             this.button6.ForeColor = System.Drawing.Color.Transparent;
-            this.button6.Location = new System.Drawing.Point(294, 286);
+            this.button6.Location = new System.Drawing.Point(297, 286);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(25, 25);
             this.button6.TabIndex = 11;
             this.button6.UseVisualStyleBackColor = false;
             this.button6.Click += new System.EventHandler(this.button6_Click);
+            this.button6.MouseHover += new System.EventHandler(this.button6_MouseHover);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(331, 314);
+            this.ClientSize = new System.Drawing.Size(334, 316);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
@@ -278,6 +287,7 @@ namespace FrutaGroovePlayer
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
 

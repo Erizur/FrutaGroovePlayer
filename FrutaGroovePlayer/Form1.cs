@@ -13,6 +13,7 @@ using System.Linq;
 using System.Diagnostics;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System.Xml;
 
 namespace FrutaGroovePlayer
 {
@@ -21,6 +22,8 @@ namespace FrutaGroovePlayer
         public string songPath;
         public string jsonPlaylist;
         public List<string> songList = new List<string>();
+        public List<string> fileArray;
+        public bool isMultipleSongs;
         public bool isPlaylist;
         public bool isSwitching;
         public WaveOutEvent outputDevice;
@@ -90,16 +93,21 @@ namespace FrutaGroovePlayer
                 }
 
             }
-
             if (songLocation == null || songLocation == "")
             {
 
             }
             else
             {
+                var multipleSongPath = Path.GetDirectoryName(songLocation);
+                fileArray = Directory.EnumerateFiles(multipleSongPath, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) || s.EndsWith(".wav", StringComparison.OrdinalIgnoreCase) || s.EndsWith(".flac", StringComparison.OrdinalIgnoreCase)).ToList();
+                if (fileArray.Count != 0)
+                {
+                    isMultipleSongs = true;
+                }
                 songPath = songLocation;
             }
-
+            
         }
 
         #region DWM API
@@ -120,7 +128,6 @@ namespace FrutaGroovePlayer
 
 
         #endregion DWM API
-
         void SetupRPC()
         {
             Client = new DiscordRpcClient("863620431587704892");  //Creates the client
@@ -140,7 +147,7 @@ namespace FrutaGroovePlayer
         private void OnPlaybackStopped(object sender, StoppedEventArgs args)
         {
 
-            if (isPlaylist == true && audioFile.Position >= audioFile.Length)
+            if (isPlaylist == true && audioFile.Position >= audioFile.Length && song_index != songList.Count - 1)
             {
                 song_index++;
                 songPath = songList[song_index];
@@ -179,7 +186,7 @@ namespace FrutaGroovePlayer
                             Assets = new Assets()
                             {
                                 LargeImageKey = "image_large",
-                                LargeImageText = "Beta 2.4",
+                                LargeImageText = "1.1",
                                 SmallImageKey = "image_small"
                             }
                         });
@@ -193,7 +200,7 @@ namespace FrutaGroovePlayer
                             Assets = new Assets()
                             {
                                 LargeImageKey = "image_large",
-                                LargeImageText = "Beta 2.4",
+                                LargeImageText = "1.1",
                                 SmallImageKey = "image_small"
                             }
                         });
@@ -207,7 +214,7 @@ namespace FrutaGroovePlayer
                             Assets = new Assets()
                             {
                                 LargeImageKey = "image_large",
-                                LargeImageText = "Beta 2.4",
+                                LargeImageText = "1.1",
                                 SmallImageKey = "image_small"
                             }
                         });
@@ -218,13 +225,35 @@ namespace FrutaGroovePlayer
                     tbPauseButton.Enabled = true;
                 }
             }
-            else if (isPlaylist == true && isSwitching == true)
+            else if (isPlaylist == true && isSwitching == true || isMultipleSongs == true && isSwitching == true)
             {
                 isSwitching = false;
                 PlayButton.Visible = false;
                 PauseButton.Visible = true;
                 tbPlayButton.Enabled = false;
                 tbPauseButton.Enabled = true;
+            }
+            else if (isPlaylist == true && audioFile.Position >= audioFile.Length && song_index == songList.Count - 1)
+            {
+                if (audioFile == null)
+                {
+
+                }
+                else
+                {
+                    audioFile.Position = 0;
+                    PlayButton.Visible = true;
+                    PauseButton.Visible = false;
+                    tbPlayButton.Enabled = true;
+                    tbPauseButton.Enabled = false;
+                    this.Text = "FrutaGroove Player";
+                    timer1.Stop();
+                    if (outputDevice == null)
+                    {
+                        outputDevice.Dispose();
+                        outputDevice = null;
+                    }
+                }
             }
             else
             {
@@ -245,6 +274,10 @@ namespace FrutaGroovePlayer
 
         private void PauseButton_Click(object sender, EventArgs e)
         {
+            if(isPlaylist == true && song_index == songList.Count - 1)
+            {
+
+            }
             if (WaveOut.DeviceCount != 0)
             {
                 outputDevice.Stop();
@@ -261,6 +294,10 @@ namespace FrutaGroovePlayer
             tbPauseButton.Click += new EventHandler<ThumbnailButtonClickedEventArgs>(PauseButton_Click);
             TaskbarManager.Instance.ThumbnailToolBars.AddButtons(this.Handle, tbPlayButton, tbPauseButton);
             SetupRPC();
+            if (Properties.Settings.Default.updateStartup == true)
+            {
+                CheckForUpdate();
+            }
             if (songPath == null || songPath == "")
             {
 
@@ -296,7 +333,7 @@ namespace FrutaGroovePlayer
                             Assets = new Assets()
                             {
                                 LargeImageKey = "image_large",
-                                LargeImageText = "Beta 2.4",
+                                LargeImageText = "1.1",
                                 SmallImageKey = "image_small"
                             }
                         });
@@ -310,7 +347,7 @@ namespace FrutaGroovePlayer
                             Assets = new Assets()
                             {
                                 LargeImageKey = "image_large",
-                                LargeImageText = "Beta 2.4",
+                                LargeImageText = "1.1",
                                 SmallImageKey = "image_small"
                             }
                         });
@@ -324,7 +361,7 @@ namespace FrutaGroovePlayer
                             Assets = new Assets()
                             {
                                 LargeImageKey = "image_large",
-                                LargeImageText = "Beta 2.4",
+                                LargeImageText = "1.1",
                                 SmallImageKey = "image_small"
                             }
                         });
@@ -346,6 +383,7 @@ namespace FrutaGroovePlayer
             else
             {
                 audioFile.Position = 0;
+                trackBar2.Value = 0;
                 if (WaveOut.DeviceCount != 0 && outputDevice != null)
                 {
                     outputDevice.Stop();
@@ -373,6 +411,14 @@ namespace FrutaGroovePlayer
                 pictureBox2.BackgroundImage = Properties.Resources.nocoverNew;
                 audioFile.Position = 0;
                 PlayButton.Visible = true;
+                isMultipleSongs = false;
+                song_index = 0;
+                songPath = null;
+                if (isPlaylist == true)
+                {
+                    isPlaylist = false;
+                    songList.Clear();
+                }
                 PauseButton.Visible = false;
                 tbPlayButton.Enabled = true;
                 tbPauseButton.Enabled = false;
@@ -416,7 +462,7 @@ namespace FrutaGroovePlayer
                             Assets = new Assets()
                             {
                                 LargeImageKey = "image_large",
-                                LargeImageText = "Beta 2.4",
+                                LargeImageText = "1.1",
                                 SmallImageKey = "image_small"
                             }
                         });
@@ -430,7 +476,7 @@ namespace FrutaGroovePlayer
                             Assets = new Assets()
                             {
                                 LargeImageKey = "image_large",
-                                LargeImageText = "Beta 2.4",
+                                LargeImageText = "1.1",
                                 SmallImageKey = "image_small"
                             }
                         });
@@ -444,7 +490,7 @@ namespace FrutaGroovePlayer
                             Assets = new Assets()
                             {
                                 LargeImageKey = "image_large",
-                                LargeImageText = "Beta 2.4",
+                                LargeImageText = "1.1",
                                 SmallImageKey = "image_small"
                             }
                         });
@@ -559,6 +605,14 @@ namespace FrutaGroovePlayer
                     }
                 }
             }
+            if(isPlaylist == true)
+            {
+                isPlaylist = false;
+                isMultipleSongs = false;
+                songList.Clear();
+                song_index = 0;
+                songPath = null;
+            }
             if (openFileDialog2.ShowDialog() == DialogResult.OK)
             {
                 StreamReader r = new StreamReader(openFileDialog2.FileName);
@@ -628,7 +682,7 @@ namespace FrutaGroovePlayer
                                 Assets = new Assets()
                                 {
                                     LargeImageKey = "image_large",
-                                    LargeImageText = "Beta 2.4",
+                                    LargeImageText = "1.1",
                                     SmallImageKey = "image_small"
                                 }
                             });
@@ -642,7 +696,7 @@ namespace FrutaGroovePlayer
                                 Assets = new Assets()
                                 {
                                     LargeImageKey = "image_large",
-                                    LargeImageText = "Beta 2.4",
+                                    LargeImageText = "1.1",
                                     SmallImageKey = "image_small"
                                 }
                             });
@@ -656,7 +710,7 @@ namespace FrutaGroovePlayer
                                 Assets = new Assets()
                                 {
                                     LargeImageKey = "image_large",
-                                    LargeImageText = "Beta 2.4",
+                                    LargeImageText = "1.1",
                                     SmallImageKey = "image_small"
                                 }
                             });
@@ -680,17 +734,136 @@ namespace FrutaGroovePlayer
 
         private void button5_Click(object sender, EventArgs e)
         {
+            if(isMultipleSongs == true)
+            {
+                if (song_index == fileArray.Count - 1)
+                {
+                    if (audioFile == null)
+                    {
+
+                    }
+                    else
+                    {
+                        PlaylistEnd();
+                    }
+                }
+                else
+                {
+                    song_index++;
+                    songPath = fileArray[song_index];
+                    audioFile = new AudioFileReader(songPath);
+                }
+                if (WaveOut.DeviceCount != 0)
+                {
+                    if (outputDevice == null)
+                    {
+                        outputDevice = new WaveOutEvent();
+                        outputDevice.PlaybackStopped += OnPlaybackStopped;
+                    }
+                    string songNamePath = Path.GetFileName(songPath);
+                    var coverFile = TagLib.File.Create(songPath);
+                    this.Text = "FrutaGroove Player - " + songNamePath;
+                    if (coverFile.Tag.Pictures.Length >= 1)
+                    {
+                        var bin = (byte[])(coverFile.Tag.Pictures[0].Data.Data);
+                        pictureBox2.BackgroundImage = Image.FromStream(new MemoryStream(bin)).GetThumbnailImage(200, 200, null, IntPtr.Zero);
+                    }
+                    else
+                    {
+                        pictureBox2.BackgroundImage = Properties.Resources.nocoverNew;
+                    }
+                    outputDevice.Volume = trackBar1.Value / 100f;
+                    if (outputDevice.PlaybackState == PlaybackState.Playing)
+                    {
+                        isSwitching = true;
+                        outputDevice.Stop();
+                        audioFile.Position = 0;
+                        outputDevice.Init(audioFile);
+                        outputDevice.Play();
+                        trackBar2.Refresh();
+                        timer1.Start();
+                    }
+                    else
+                    {
+                        audioFile.Position = 0;
+                        outputDevice.Init(audioFile);
+                        outputDevice.Play();
+                        trackBar2.Refresh();
+                        timer1.Start();
+                    }
+                    if (coverFile.Tag.Title != null && coverFile.Tag.FirstPerformer != null)
+                    {
+                        Client.SetPresence(new RichPresence()
+                        {
+                            Details = "Simple Music Player",
+                            State = "Playing " + coverFile.Tag.Title + " by " + coverFile.Tag.FirstPerformer,
+                            Assets = new Assets()
+                            {
+                                LargeImageKey = "image_large",
+                                LargeImageText = "1.1",
+                                SmallImageKey = "image_small"
+                            }
+                        });
+                    }
+                    else if (coverFile.Tag.Title != null)
+                    {
+                        Client.SetPresence(new RichPresence()
+                        {
+                            Details = "Simple Music Player",
+                            State = "Playing " + coverFile.Tag.Title + " by an Unknown Artist",
+                            Assets = new Assets()
+                            {
+                                LargeImageKey = "image_large",
+                                LargeImageText = "1.1",
+                                SmallImageKey = "image_small"
+                            }
+                        });
+                    }
+                    else
+                    {
+                        Client.SetPresence(new RichPresence()
+                        {
+                            Details = "Simple Music Player",
+                            State = "Playing a Music File",
+                            Assets = new Assets()
+                            {
+                                LargeImageKey = "image_large",
+                                LargeImageText = "1.1",
+                                SmallImageKey = "image_small"
+                            }
+                        });
+                    }
+                    PlayButton.Visible = false;
+                    PauseButton.Visible = true;
+                    tbPlayButton.Enabled = false;
+                    tbPauseButton.Enabled = true;
+                }
+            }
             if (isPlaylist == true)
             {
-                if(song_index > songList.Count)
+                if(song_index >= songList.Count)
                 {
 
                 }
                 else
                 {
-                    song_index++;
-                    songPath = songList[song_index];
-                    audioFile = new AudioFileReader(songPath);
+                    if(song_index == songList.Count - 1)
+                    {
+                        if (audioFile == null)
+                        {
+
+                        }
+                        else
+                        {
+                            PlaylistEnd();
+                        }
+                    }
+                    else
+                    {
+                        song_index++;
+                        songPath = songList[song_index];
+                        audioFile = new AudioFileReader(songPath);
+                    }
                     if (WaveOut.DeviceCount != 0)
                     {
                         if (outputDevice == null)
@@ -738,7 +911,7 @@ namespace FrutaGroovePlayer
                                 Assets = new Assets()
                                 {
                                     LargeImageKey = "image_large",
-                                    LargeImageText = "Beta 2.4",
+                                    LargeImageText = "1.1",
                                     SmallImageKey = "image_small"
                                 }
                             });
@@ -752,7 +925,7 @@ namespace FrutaGroovePlayer
                                 Assets = new Assets()
                                 {
                                     LargeImageKey = "image_large",
-                                    LargeImageText = "Beta 2.4",
+                                    LargeImageText = "1.1",
                                     SmallImageKey = "image_small"
                                 }
                             });
@@ -766,7 +939,7 @@ namespace FrutaGroovePlayer
                                 Assets = new Assets()
                                 {
                                     LargeImageKey = "image_large",
-                                    LargeImageText = "Beta 2.4",
+                                    LargeImageText = "1.1",
                                     SmallImageKey = "image_small"
                                 }
                             });
@@ -777,12 +950,110 @@ namespace FrutaGroovePlayer
                         tbPauseButton.Enabled = true;
                     }
                 }
-
             }
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
+            if(isMultipleSongs == true)
+            {
+                if (song_index <= 0)
+                {
+                    outputDevice.Stop();
+                }
+                else
+                {
+                    song_index--;
+                    songPath = fileArray[song_index];
+                    audioFile = new AudioFileReader(songPath);
+                    if (WaveOut.DeviceCount != 0)
+                    {
+                        if (outputDevice == null)
+                        {
+                            outputDevice = new WaveOutEvent();
+                            outputDevice.PlaybackStopped += OnPlaybackStopped;
+                        }
+                        string songNamePath = Path.GetFileName(songPath);
+                        var coverFile = TagLib.File.Create(songPath);
+                        this.Text = "FrutaGroove Player - " + songNamePath;
+                        if (coverFile.Tag.Pictures.Length >= 1)
+                        {
+                            var bin = (byte[])(coverFile.Tag.Pictures[0].Data.Data);
+                            pictureBox2.BackgroundImage = Image.FromStream(new MemoryStream(bin)).GetThumbnailImage(200, 200, null, IntPtr.Zero);
+                        }
+                        else
+                        {
+                            pictureBox2.BackgroundImage = Properties.Resources.nocoverNew;
+                        }
+                        outputDevice.Volume = trackBar1.Value / 100f;
+                        if (outputDevice.PlaybackState == PlaybackState.Playing)
+                        {
+                            isSwitching = true;
+                            outputDevice.Stop();
+                            audioFile.Position = 0;
+                            outputDevice.Init(audioFile);
+                            outputDevice.Play();
+                            trackBar2.Refresh();
+                            timer1.Start();
+                        }
+                        else
+                        {
+                            audioFile.Position = 0;
+                            outputDevice.Init(audioFile);
+                            outputDevice.Play();
+                            trackBar2.Refresh();
+                            timer1.Start();
+                        }
+
+                        if (coverFile.Tag.Title != null && coverFile.Tag.FirstPerformer != null)
+                        {
+                            Client.SetPresence(new RichPresence()
+                            {
+                                Details = "Simple Music Player",
+                                State = "Playing " + coverFile.Tag.Title + " by " + coverFile.Tag.FirstPerformer,
+                                Assets = new Assets()
+                                {
+                                    LargeImageKey = "image_large",
+                                    LargeImageText = "1.1",
+                                    SmallImageKey = "image_small"
+                                }
+                            });
+                        }
+                        else if (coverFile.Tag.Title != null)
+                        {
+                            Client.SetPresence(new RichPresence()
+                            {
+                                Details = "Simple Music Player",
+                                State = "Playing " + coverFile.Tag.Title + " by an Unknown Artist",
+                                Assets = new Assets()
+                                {
+                                    LargeImageKey = "image_large",
+                                    LargeImageText = "1.1",
+                                    SmallImageKey = "image_small"
+                                }
+                            });
+                        }
+                        else
+                        {
+                            Client.SetPresence(new RichPresence()
+                            {
+                                Details = "Simple Music Player",
+                                State = "Playing a Music File",
+                                Assets = new Assets()
+                                {
+                                    LargeImageKey = "image_large",
+                                    LargeImageText = "1.1",
+                                    SmallImageKey = "image_small"
+                                }
+                            });
+                        }
+                        PlayButton.Visible = false;
+                        PauseButton.Visible = true;
+                        tbPlayButton.Enabled = false;
+                        tbPauseButton.Enabled = true;
+                    }
+                }
+            }
             if (isPlaylist == true)
             {
                 if(song_index <= 0)
@@ -842,7 +1113,7 @@ namespace FrutaGroovePlayer
                                 Assets = new Assets()
                                 {
                                     LargeImageKey = "image_large",
-                                    LargeImageText = "Beta 2.4",
+                                    LargeImageText = "1.1",
                                     SmallImageKey = "image_small"
                                 }
                             });
@@ -856,7 +1127,7 @@ namespace FrutaGroovePlayer
                                 Assets = new Assets()
                                 {
                                     LargeImageKey = "image_large",
-                                    LargeImageText = "Beta 2.4",
+                                    LargeImageText = "1.1",
                                     SmallImageKey = "image_small"
                                 }
                             });
@@ -870,7 +1141,7 @@ namespace FrutaGroovePlayer
                                 Assets = new Assets()
                                 {
                                     LargeImageKey = "image_large",
-                                    LargeImageText = "Beta 2.4",
+                                    LargeImageText = "1.1",
                                     SmallImageKey = "image_small"
                                 }
                             });
@@ -889,6 +1160,135 @@ namespace FrutaGroovePlayer
         {
             Form2 fm2 = new Form2();
             fm2.Show();
+        }
+
+        private void PlaylistEnd()
+        {
+            if (audioFile == null)
+            {
+
+            }
+            else
+            {
+                audioFile.Position = 0;
+                PlayButton.Visible = true;
+                PauseButton.Visible = false;
+                tbPlayButton.Enabled = true;
+                tbPauseButton.Enabled = false;
+                this.Text = "FrutaGroove Player";
+                timer1.Stop();
+                if (outputDevice == null)
+                {
+                    outputDevice.Dispose();
+                    outputDevice = null;
+                }
+            }
+        }
+
+        private void CheckForUpdate()
+        {
+            string downloadUrl = "";
+            Version newVer = null;
+            string xmlUrl = "https://am-games.net/fgp/updater.xml";
+            XmlTextReader reader = null;
+            try
+            {
+                reader = new XmlTextReader(xmlUrl);
+                reader.MoveToContent();
+                string elementName = "";
+                if ((reader.NodeType == XmlNodeType.Element) && (reader.Name == "frutaGroove"))
+                {
+                    while (reader.Read())
+                    {
+                        if (reader.NodeType == XmlNodeType.Element)
+                        {
+                            elementName = reader.Name;
+                        }
+                        else
+                        {
+                            if ((reader.NodeType == XmlNodeType.Text) && (reader.HasValue))
+                            {
+                                switch (elementName)
+                                {
+                                    case "version":
+                                        newVer = new Version(reader.Value);
+                                        break;
+                                    case "url":
+                                        downloadUrl = reader.Value;
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+                Version applicationVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+                if (applicationVersion.CompareTo(newVer) < 0)
+                {
+                    DialogResult result = MessageBox.Show("FrutaGroove Player Version " + newVer.Major + "." + newVer.Minor + "." + newVer.Build + " is now available to download. Update Now?", "New Version Available", MessageBoxButtons.YesNo);
+                    if (result == DialogResult.Yes)
+                    {
+                        string path = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath);
+
+                        Process.Start(path + "\\FGPUpdater.exe");
+                        Application.Exit();
+                    }
+                    else if (result == DialogResult.No)
+                    {
+
+                    }
+                }
+            }
+        }
+
+        private void button1_MouseHover(object sender, EventArgs e)
+        {
+            toolTip1.Show("Load File...", button1);
+        }
+
+        private void button3_MouseHover(object sender, EventArgs e)
+        {
+            toolTip1.Show("Load Playlist...", button3);
+        }
+
+        private void button5_MouseHover(object sender, EventArgs e)
+        {
+            toolTip1.Show("Next Song", button5);
+        }
+
+        private void button4_MouseHover(object sender, EventArgs e)
+        {
+            toolTip1.Show("Previous Song", button4);
+        }
+
+        private void button2_MouseHover(object sender, EventArgs e)
+        {
+            toolTip1.Show("Stop", button2);
+        }
+
+        private void PauseButton_MouseHover(object sender, EventArgs e)
+        {
+            toolTip1.Show("Pause", PauseButton);
+        }
+
+        private void PlayButton_MouseHover(object sender, EventArgs e)
+        {
+            toolTip1.Show("Play", PlayButton);
+        }
+
+        private void button6_MouseHover(object sender, EventArgs e)
+        {
+            toolTip1.Show("Settings", button6);
         }
     }
 }

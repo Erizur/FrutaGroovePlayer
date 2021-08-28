@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
@@ -21,10 +22,12 @@ namespace FrutaGroovePlayer
             if(checkBox1.Checked == true)
             {
                 Properties.Settings.Default.updateStartup = true;
+                Properties.Settings.Default.Save();
             }
             else
             {
                 Properties.Settings.Default.updateStartup = false;
+                Properties.Settings.Default.Save();
             }   
         }
 
@@ -38,14 +41,14 @@ namespace FrutaGroovePlayer
         {
             string downloadUrl = "";
             Version newVer = null;
-            string xmlUrl = "https://github.com/Erizur/FrutaGroovePlayer/blob/main/FrutaGroovePlayer/updater.xml";
+            string xmlUrl = "https://am-games.net/fgp/updater.xml";
             XmlTextReader reader = null;
             try
             {
                 reader = new XmlTextReader(xmlUrl);
                 reader.MoveToContent();
                 string elementName = "";
-                if((reader.NodeType == XmlNodeType.Element) && (reader.Name == "frutagroove"))
+                if((reader.NodeType == XmlNodeType.Element) && (reader.Name == "frutaGroove"))
                 {
                     while (reader.Read())
                     {
@@ -87,13 +90,37 @@ namespace FrutaGroovePlayer
                     DialogResult result = MessageBox.Show("FrutaGroove Player Version " + newVer.Major + "." + newVer.Minor + "." + newVer.Build + " is now available to download. Update Now?", "New Version Available", MessageBoxButtons.YesNo);
                     if(result == DialogResult.Yes)
                     {
+                        string path = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath);
 
+                        Process.Start(path + "\\FGPUpdater.exe");
+                        Application.Exit();
                     }
                     else if(result == DialogResult.No)
                     {
-
+                        
                     }
                 }
+                else
+                {
+                    MessageBox.Show("FrutaGroove Player is up to date.");
+                }
+            }
+        }
+
+        private void checkBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form2_Load(object sender, EventArgs e)
+        {
+            if (Properties.Settings.Default.updateStartup == true)
+            {
+                checkBox1.Checked = true;
+            }
+            else
+            {
+                checkBox1.Checked = false;
             }
         }
     }

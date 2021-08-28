@@ -46,6 +46,7 @@ namespace FrutaGroovePlayer
             this.checkBox1.Text = "Check Updates in Startup";
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            this.checkBox1.Click += new System.EventHandler(this.checkBox1_Click);
             // 
             // button1
             // 
@@ -80,6 +81,7 @@ namespace FrutaGroovePlayer
             this.MinimizeBox = false;
             this.Name = "Form2";
             this.Text = "Settings";
+            this.Load += new System.EventHandler(this.Form2_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
