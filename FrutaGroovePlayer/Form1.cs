@@ -605,14 +605,11 @@ namespace FrutaGroovePlayer
                     }
                 }
             }
-            if(isPlaylist == true)
-            {
-                isPlaylist = false;
-                isMultipleSongs = false;
-                songList.Clear();
-                song_index = 0;
-                songPath = null;
-            }
+            isPlaylist = false;
+            isMultipleSongs = false;
+            songList.Clear();
+            song_index = 0;
+            songPath = null;
             if (openFileDialog2.ShowDialog() == DialogResult.OK)
             {
                 StreamReader r = new StreamReader(openFileDialog2.FileName);
@@ -1238,8 +1235,7 @@ namespace FrutaGroovePlayer
                     DialogResult result = MessageBox.Show("FrutaGroove Player Version " + newVer.Major + "." + newVer.Minor + "." + newVer.Build + " is now available to download. Update Now?", "New Version Available", MessageBoxButtons.YesNo);
                     if (result == DialogResult.Yes)
                     {
-                        string path = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath);
-
+                        string path = Directory.GetCurrentDirectory();
                         Process.Start(path + "\\FGPUpdater.exe");
                         Application.Exit();
                     }
